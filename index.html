@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evidencia España | Programa Político Abierto Basado en Datos</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        navy: {
+                            800: '#1E293B',
+                            900: '#0F172A',
+                        },
+                        cobalt: {
+                            50: '#EFF6FF',
+                            100: '#DBEAFE',
+                            600: '#2563EB',
+                            700: '#1D4ED8',
+                        },
+                        emerald: {
+                            50: '#ECFDF5',
+                            100: '#D1FAE5',
+                            600: '#059669',
+                            700: '#047857',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilos personalizados mínimos para barra de desplazamiento en tabs móviles */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .tab-transition {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="bg-[#F8FAFC] text-[#0F172A] font-sans antialiased selection:bg-cobalt-100 selection:text-cobalt-700">
+
+    <!-- 1. NAVBAR FIJA SUPERIOR -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo / Identidad -->
+                <a href="#" class="flex items-center gap-2.5 group">
+                    <div class="w-8 h-8 rounded-lg bg-[#0F172A] text-white flex items-center justify-center font-mono font-bold text-sm group-hover:bg-[#2563EB] transition-colors">
+                        E_
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-base tracking-tight text-[#0F172A] leading-none">Evidencia España</span>
+                        <span class="font-mono text-[10px] text-slate-500 uppercase tracking-wider mt-0.5">Open Policy v1.0</span>
+                    </div>
+                </a>
+
+                <!-- Enlaces Escritorio -->
+                <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600">
+                    <a href="#metodologia" class="hover:text-[#0F172A] transition-colors">Metodología</a>
+                    <a href="#areas" class="hover:text-[#0F172A] transition-colors">Las 8 Áreas</a>
+                    <a href="#presupuesto" class="hover:text-[#0F172A] transition-colors">Cuadre Económico</a>
+                    <a href="#participa" class="hover:text-[#0F172A] transition-colors">Participa (Open-Source)</a>
+                </nav>
+
+                <!-- Botones CTA Navbar -->
+                <div class="hidden sm:flex items-center gap-3">
+                    <button onclick="openWhitepaperModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 transition-all">
+                        <i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-600"></i>
+                        <span>Libro Blanco</span>
+                    </button>
+                    <a href="#participa" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] shadow-sm transition-all">
+                        <i data-lucide="git-branch" class="w-3.5 h-3.5"></i>
+                        <span>Contribuir en GitHub</span>
+                    </a>
+                </div>
+
+                <!-- Botón Menú Móvil -->
+                <button id="mobile-menu-btn" aria-label="Abrir menú" class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menú Desplegable Móvil -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-5 space-y-3">
+            <a href="#metodologia" class="mobile-link block py-2 text-sm font-medium text-slate-700 hover:text-[#2563EB]">Metodología</a>
+            <a href="#areas" class="mobile-link block py-2 text-sm font-medium text-slate-700 hover:text-[#2563EB]">Las 8 Áreas y Eje Transversal</a>
+            <a href="#presupuesto" class="mobile-link block py-2 text-sm font-medium text-slate-700 hover:text-[#2563EB]">Cuadre Económico</a>
+            <a href="#participa" class="mobile-link block py-2 text-sm font-medium text-slate-700 hover:text-[#2563EB]">Participa (Open-Source)</a>
+            <div class="pt-2 flex flex-col gap-2 border-t border-slate-100">
+                <button onclick="openWhitepaperModal()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold text-slate-800 bg-slate-100 border border-slate-200">
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                    <span>Descarga el Libro Blanco Técnico</span>
+                </button>
+                <a href="#participa" class="mobile-link w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold text-white bg-[#2563EB]">
+                    <i data-lucide="git-branch" class="w-4 h-4"></i>
+                    <span>Contribuir en GitHub</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. HERO SECTION -->
+    <section class="relative overflow-hidden pt-12 pb-16 sm:pt-20 sm:pb-24 border-b border-slate-200/80 bg-white">
+        <!-- Patrón de cuadrícula sutil de fondo -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none"></div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <!-- Badge superior -->
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cobalt-50 border border-cobalt-100 text-[#2563EB] text-xs font-semibold mb-6">
+                <span class="w-2 h-2 rounded-full bg-[#059669] animate-pulse"></span>
+                <span>Programa ciudadano auditado · Versión 1.0 (Noviembre 2026)</span>
+            </div>
+
+            <!-- Título Principal -->
+            <h1 class="max-w-4xl mx-auto text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#0F172A] leading-[1.12]">
+                Política basada en evidencia. <br class="hidden sm:inline">
+                <span class="text-[#2563EB]">Soluciones reales para España.</span>
+            </h1>
+
+            <!-- Subtítulo -->
+            <p class="mt-6 max-w-2xl mx-auto text-base sm:text-lg text-slate-600 leading-relaxed">
+                Un programa de reformas estructurales abierto a la ciudadanía, diseñado con rigor técnico, auditado mediante indicadores objetivos (KPIs) y libre de dogmas ideológicos. Cada euro propuesto tiene una fuente de financiación verificada.
+            </p>
+
+            <!-- Botones de Acción Principales -->
+            <div class="mt-8 flex flex-col sm:flex-row justify-center items-center gap-3.5">
+                <a href="#areas" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold text-white bg-[#0F172A] hover:bg-slate-800 shadow-sm transition-all">
+                    <span>Explorar las 8 Áreas de Reforma</span>
+                    <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                </a>
+                <a href="#presupuesto" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold text-[#0F172A] bg-white hover:bg-slate-50 border border-slate-300 transition-all">
+                    <i data-lucide="calculator" class="w-4 h-4 text-[#059669]"></i>
+                    <span>Ver el Cuadre Presupuestario</span>
+                </a>
+            </div>
+
+            <!-- 3 Tarjetas de Métricas Clave -->
+            <div class="mt-14 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-5 text-left">
+                <!-- Métrica 1 -->
+                <div class="bg-[#F8FAFC] rounded-2xl p-6 border border-slate-200/90 shadow-sm">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-mono text-xs font-semibold uppercase tracking-wider text-slate-500">Sostenibilidad Fiscal</span>
+                        <span class="p-2 rounded-lg bg-emerald-50 text-[#059669]">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i>
+                        </span>
+                    </div>
+                    <div class="text-3xl font-extrabold text-[#059669] tracking-tight">0 € de déficit</div>
+                    <p class="mt-2 text-sm text-slate-600 leading-snug">
+                        Financiado al 100% eliminando subvenciones ineficientes (AIReF) y fraude en licitaciones, generando superávit para bajar deuda.
+                    </p>
+                </div>
+
+                <!-- Métrica 2 -->
+                <div class="bg-[#F8FAFC] rounded-2xl p-6 border border-slate-200/90 shadow-sm">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-mono text-xs font-semibold uppercase tracking-wider text-slate-500">Cobertura Integral</span>
+                        <span class="p-2 rounded-lg bg-cobalt-50 text-[#2563EB]">
+                            <i data-lucide="layers" class="w-5 h-5"></i>
+                        </span>
+                    </div>
+                    <div class="text-3xl font-extrabold text-[#0F172A] tracking-tight">8 Áreas + Igualdad</div>
+                    <p class="mt-2 text-sm text-slate-600 leading-snug">
+                        Reformas sincronizadas en Vivienda, Sanidad, Pensiones, Educación, Economía, Energía, Justicia y Función Pública.
+                    </p>
+                </div>
+
+                <!-- Métrica 3 -->
+                <div class="bg-[#F8FAFC] rounded-2xl p-6 border border-slate-200/90 shadow-sm">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-mono text-xs font-semibold uppercase tracking-wider text-slate-500">Gobernanza Abierta</span>
+                        <span class="p-2 rounded-lg bg-slate-200/70 text-[#0F172A]">
+                            <i data-lucide="git-commit" class="w-5 h-5"></i>
+                        </span>
+                    </div>
+                    <div class="text-3xl font-extrabold text-[#0F172A] tracking-tight">100% Open-Source</div>
+                    <p class="mt-2 text-sm text-slate-600 leading-snug">
+                        Documento vivo con control de versiones. Cualquier ciudadano o experto puede proponer mejoras aportando evidencia.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. SECCIÓN METODOLOGÍA (3 PASOS VISUALES) -->
+    <section id="metodologia" class="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+            <span class="font-mono text-xs font-semibold uppercase tracking-wider text-[#2563EB]">Método Científico Aplicado</span>
+            <h2 class="mt-2 text-2xl sm:text-4xl font-bold tracking-tight text-[#0F172A]">
+                Cómo diseñamos cada propuesta
+            </h2>
+            <p class="mt-3 text-base text-slate-600">
+                Huyamos de las ocurrencias legislativas y los eslóganes vacíos. Toda política pública incluida en este programa supera tres filtros técnicos obligatorios antes de aprobarse.
+            </p>
+        </div>
+
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+            <!-- Paso 1 -->
+            <div class="bg-white rounded-2xl p-7 border border-slate-200 shadow-sm relative">
+                <div class="flex items-center gap-3 mb-5">
+                    <span class="w-9 h-9 rounded-xl bg-[#0F172A] text-white font-mono font-bold text-sm flex items-center justify-center">01</span>
+                    <span class="text-xs font-mono font-semibold uppercase tracking-wider text-slate-400">Auditoría Inicial</span>
+                </div>
+                <h3 class="text-lg font-bold text-[#0F172A] mb-2">Diagnóstico con KPIs reales</h3>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    Medimos el problema con datos objetivos y comparativa internacional (OCDE, Eurostat, Banco de España). Sin indicadores claros de partida, no hay diagnóstico válido.
+                </p>
+                <div class="mt-5 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-mono text-slate-500">
+                    <i data-lucide="bar-chart-2" class="w-4 h-4 text-[#2563EB]"></i>
+                    <span>Ej: Abandono escolar 13,6% vs 9% UE</span>
+                </div>
+            </div>
+
+            <!-- Paso 2 -->
+            <div class="bg-white rounded-2xl p-7 border border-slate-200 shadow-sm relative">
+                <div class="flex items-center gap-3 mb-5">
+                    <span class="w-9 h-9 rounded-xl bg-[#2563EB] text-white font-mono font-bold text-sm flex items-center justify-center">02</span>
+                    <span class="text-xs font-mono font-semibold uppercase tracking-wider text-slate-400">Análisis Causal</span>
+                </div>
+                <h3 class="text-lg font-bold text-[#0F172A] mb-2">Detección del cuello de botella</h3>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    Identificamos qué norma, incentivo perverso o traba burocrática bloquea el sistema. No basta con inyectar más dinero si la tubería institucional está atascada.
+                </p>
+                <div class="mt-5 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-mono text-slate-500">
+                    <i data-lucide="filter" class="w-4 h-4 text-[#2563EB]"></i>
+                    <span>Ej: Saltos regulatorios en pymes &gt;50 emp.</span>
+                </div>
+            </div>
+
+            <!-- Paso 3 -->
+            <div class="bg-white rounded-2xl p-7 border border-slate-200 shadow-sm relative">
+                <div class="flex items-center gap-3 mb-5">
+                    <span class="w-9 h-9 rounded-xl bg-[#059669] text-white font-mono font-bold text-sm flex items-center justify-center">03</span>
+                    <span class="text-xs font-mono font-semibold uppercase tracking-wider text-slate-400">Rendición de Cuentas</span>
+                </div>
+                <h3 class="text-lg font-bold text-[#0F172A] mb-2">Solución probada y evaluación ex-post</h3>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    Aplicamos medidas con evidencia empírica demostrada y cláusula de caducidad: si a los 3 años la AIReF verifica que una partida no cumple sus KPIs, se elimina automáticamente.
+                </p>
+                <div class="mt-5 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-mono text-slate-500">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#059669]"></i>
+                    <span>Evaluación obligatoria cada 36 meses</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. SECCIÓN INTERACTIVA "LAS 8 ÁREAS Y EJE TRANSVERSAL" -->
+    <section id="areas" class="py-16 sm:py-24 bg-white border-y border-slate-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+                <div class="max-w-2xl">
+                    <span class="font-mono text-xs font-semibold uppercase tracking-wider text-[#2563EB]">Arquitectura del Programa</span>
+                    <h2 class="mt-2 text-2xl sm:text-4xl font-bold tracking-tight text-[#0F172A]">
+                        Las 8 Áreas Estratégicas y Eje Transversal
+                    </h2>
+                    <p class="mt-3 text-base text-slate-600">
+                        Selecciona cada bloque para explorar el diagnóstico con datos reales, las reformas concretas y el impacto medible esperado.
+                    </p>
+                </div>
+                <div class="text-xs font-mono text-slate-500 bg-slate-100 px-3 py-2 rounded-lg border border-slate-200 self-start md:self-end">
+                    9 bloques · 27 medidas estructurales
+                </div>
+            </div>
+
+            <!-- Barra de Pestañas (Tabs) Responsive con Scroll Horizontal en Móvil -->
+            <div role="tablist" aria-label="Áreas del programa político" id="tabs-container" class="flex overflow-x-auto no-scrollbar gap-2 pb-3 mb-8 border-b border-slate-200">
+                <!-- Se puebla dinámicamente vía JS para mantener el código limpio y escalable -->
+            </div>
+
+            <!-- Contenedor Dinámico del Contenido del Área Seleccionada -->
+            <div id="area-display" class="bg-[#F8FAFC] rounded-2xl border border-slate-200/90 p-6 sm:p-10 shadow-sm">
+                <!-- Renderizado dinámico por JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. SIMULADOR / CUADRE PRESUPUESTARIO INTERACTIVO -->
+    <section id="presupuesto" class="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
+            <div class="max-w-2xl">
+                <span class="font-mono text-xs font-semibold uppercase tracking-wider text-[#059669]">Contabilidad Transparente</span>
+                <h2 class="mt-2 text-2xl sm:text-4xl font-bold tracking-tight text-[#0F172A]">
+                    ¿De dónde sale el dinero y a qué se destina?
+                </h2>
+                <p class="mt-3 text-base text-slate-600">
+                    No prometemos bajar impuestos y subir el gasto por arte de magia. Este simulador muestra el balance anual consolidado en régimen de crucero (horizonte 4 años).
+                </p>
+            </div>
+
+            <!-- Toggle Interactivo Escenario Conservador vs Óptimo -->
+            <div class="bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm inline-flex items-center self-start lg:self-end">
+                <button id="btn-conservador" onclick="setBudgetScenario('conservador')" class="px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-[#0F172A] text-white shadow-sm">
+                    Escenario Conservador
+                </button>
+                <button id="btn-optimo" onclick="setBudgetScenario('optimo')" class="px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-[#0F172A]">
+                    Escenario Óptimo
+                </button>
+            </div>
+        </div>
+
+        <!-- Tarjeta Resumen del Saldo Neto -->
+        <div class="bg-[#0F172A] text-white rounded-2xl p-6 sm:p-8 mb-8 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div>
+                <div class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-400">
+                    <span id="scenario-badge" class="px-2 py-0.5 rounded bg-slate-800 text-emerald-400 border border-slate-700">Estimación Prudente AIReF</span>
+                    <span>· Balance Anual Consolidado</span>
+                </div>
+                <h3 class="mt-2 text-xl sm:text-2xl font-bold">Superávit Estructural Neto Disponible</h3>
+                <p class="mt-1 text-sm text-slate-300 max-w-xl">
+                    Remanente anual tras pagar íntegramente las nuevas inversiones, destinado a <strong class="text-white">reducir deuda pública</strong> y <strong class="text-white">rebajar cotizaciones sociales</strong> al empleo.
+                </p>
+            </div>
+            <div class="bg-slate-800/90 border border-slate-700 rounded-xl px-6 py-4 text-left md:text-right w-full md:w-auto">
+                <div class="text-xs font-mono text-slate-400">SALDO NETO ANUAL</div>
+                <div id="net-surplus-display" class="text-3xl sm:text-4xl font-extrabold text-[#10B981] font-mono mt-1">
+                    +17.500 M€
+                </div>
+                <div id="net-detail-display" class="text-xs text-slate-300 mt-1 font-mono">
+                    34.500 M€ ingresos − 17.000 M€ inversión
+                </div>
+            </div>
+        </div>
+
+        <!-- Columnas Comparativas: Ingresos/Eficiencias vs Inversiones -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Columna Izquierda: Fuentes de Financiación -->
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+                <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-100">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-50 text-[#059669] flex items-center justify-center">
+                            <i data-lucide="trending-up" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-base text-[#0F172A]">Eficiencias y Nuevos Recursos</h4>
+                            <p class="text-xs text-slate-500">Sin subir tipos impositivos al trabajo</p>
+                        </div>
+                    </div>
+                    <span id="total-inflows" class="font-mono font-bold text-lg text-[#059669]">+34.500 M€</span>
+                </div>
+
+                <div id="inflows-list" class="space-y-5">
+                    <!-- Barras generadas dinámicamente por JS -->
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Destino de las Inversiones -->
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+                <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-100">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-cobalt-50 text-[#2563EB] flex items-center justify-center">
+                            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-base text-[#0F172A]">Inversiones Estratégicas</h4>
+                            <p class="text-xs text-slate-500">Partidas blindadas con evaluación por KPIs</p>
+                        </div>
+                    </div>
+                    <span id="total-outflows" class="font-mono font-bold text-lg text-[#2563EB]">-17.000 M€</span>
+                </div>
+
+                <div id="outflows-list" class="space-y-4">
+                    <!-- Barras generadas dinámicamente por JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. SECCIÓN "PROGRAMA ABIERTO (OPEN-SOURCE POLICY)" -->
+    <section id="participa" class="py-16 sm:py-24 bg-white border-t border-slate-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                <!-- Columna Izquierda: Explicación del Modelo Open-Source -->
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-mono text-xs font-semibold">
+                        <i data-lucide="git-pull-request" class="w-3.5 h-3.5 text-[#2563EB]"></i>
+                        <span>Open-Source Policy · v1.0</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-4xl font-bold tracking-tight text-[#0F172A]">
+                        Un programa vivo, auditado por la comunidad
+                    </h2>
+                    <p class="text-base text-slate-600 leading-relaxed">
+                        Los programas electorales tradicionales son documentos cerrados escritos a puerta cerrada cada cuatro años. Nosotros gestionamos este proyecto como <strong>software de código abierto</strong>: transparente, trazable y mejorable por cualquiera que aporte datos.
+                    </p>
+
+                    <div class="space-y-4 pt-2">
+                        <div class="flex items-start gap-3.5">
+                            <div class="w-8 h-8 rounded-lg bg-cobalt-50 text-[#2563EB] flex items-center justify-center shrink-0 mt-0.5">
+                                <i data-lucide="file-code" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-sm text-[#0F172A]">Control de Versiones en GitHub</h3>
+                                <p class="text-sm text-slate-600 mt-0.5">Cada reforma tiene su historial de cambios. Si un economista, médico o ingeniero detecta un error de cálculo o propone una alternativa más eficiente, puede abrir un <em>Pull Request</em>.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3.5">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-[#059669] flex items-center justify-center shrink-0 mt-0.5">
+                                <i data-lucide="messages-square" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-sm text-[#0F172A]">Grupos de Trabajo Temáticos en Discord</h3>
+                                <p class="text-sm text-slate-600 mt-0.5">Canales ordenados por área (<code class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded">#sanidad</code>, <code class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded">#energia-agua</code>, <code class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded">#fiscalidad</code>) para debatir con fuentes verificables y sin ruido partidista.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enlaces rápidos de comunidad -->
+                    <div class="pt-4 flex flex-wrap gap-3">
+                        <button onclick="showToast('Abriendo repositorio GitHub (evidencia-espana/programa-v1)...')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold bg-[#0F172A] text-white hover:bg-slate-800 transition-colors">
+                            <i data-lucide="github" class="w-4 h-4"></i>
+                            <span>Ver Repositorio GitHub</span>
+                        </button>
+                        <button onclick="showToast('Enlace de invitación a Discord copiado al portapapeles.')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-100 text-[#0F172A] hover:bg-slate-200 border border-slate-200 transition-colors">
+                            <i data-lucide="users" class="w-4 h-4 text-[#2563EB]"></i>
+                            <span>Unirse al Discord Técnico</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Formulario Interactivo Simulado -->
+                <div class="lg:col-span-6">
+                    <div class="bg-[#F8FAFC] rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+                        <h3 class="text-lg font-bold text-[#0F172A]">Proponer mejora o sumarse al equipo</h3>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-1 mb-6">
+                            Envía una enmienda técnica respaldada por datos o indícanos en qué área quieres colaborar.
+                        </p>
+
+                        <form id="proposal-form" class="space-y-4" novalidate>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="user-name" class="block text-xs font-semibold text-slate-700 mb-1.5">Nombre o Alias *</label>
+                                    <input type="text" id="user-name" required placeholder="Ej. Elena Gómez" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label for="user-email" class="block text-xs font-semibold text-slate-700 mb-1.5">Correo electrónico *</label>
+                                    <input type="email" id="user-email" required placeholder="elena@ejemplo.es" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="user-area" class="block text-xs font-semibold text-slate-700 mb-1.5">Área del Programa *</label>
+                                    <select id="user-area" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent">
+                                        <option value="Vivienda y Urbanismo">1. Vivienda y Urbanismo</option>
+                                        <option value="Sanidad (SNS)">2. Sanidad (SNS)</option>
+                                        <option value="Asuntos Sociales y Pensiones">3. Asuntos Sociales y Pensiones</option>
+                                        <option value="Educación y FP">4. Educación y FP</option>
+                                        <option value="Economía y Fiscalidad">5. Economía y Fiscalidad</option>
+                                        <option value="Energía, Agua y Medio Ambiente">6. Energía, Agua y Clima</option>
+                                        <option value="Seguridad, Defensa y Justicia">7. Seguridad, Defensa y Justicia</option>
+                                        <option value="Regeneración y Función Pública">8. Regeneración y Función Pública</option>
+                                        <option value="Cultura, Deporte e Igualdad">9. Cultura, Deporte e Igualdad</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="user-role" class="block text-xs font-semibold text-slate-700 mb-1.5">Tipo de participación</label>
+                                    <select id="user-role" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent">
+                                        <option value="Enmienda con datos">Proponer mejora / enmienda con datos</option>
+                                        <option value="Revisión técnica">Colaborar como revisor técnico</option>
+                                        <option value="Divulgación">Ayudar en comunicación y redes</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="user-proposal" class="block text-xs font-semibold text-slate-700 mb-1.5">Propuesta, fuente de datos o comentario *</label>
+                                <textarea id="user-proposal" rows="3" required placeholder="Describe brevemente tu propuesta e incluye enlaces o referencias a estudios/datos si es una enmienda técnica..." class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent"></textarea>
+                            </div>
+
+                            <!-- Mensaje de error de validación -->
+                            <div id="form-error" class="hidden text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                                Por favor, completa tu nombre, un correo electrónico válido y el detalle de tu propuesta.
+                            </div>
+
+                            <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] shadow-sm transition-all">
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                                <span>Registrar propuesta en v1.1-draft</span>
+                            </button>
+                        </form>
+
+                        <!-- Confirmación visual tras envío -->
+                        <div id="form-success" class="hidden text-center py-6 space-y-3">
+                            <div class="w-12 h-12 rounded-full bg-emerald-100 text-[#059669] flex items-center justify-center mx-auto">
+                                <i data-lucide="check" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="text-base font-bold text-[#0F172A]">¡Propuesta registrada correctamente!</h4>
+                            <p id="success-summary" class="text-sm text-slate-600 max-w-md mx-auto">
+                                Tu aportación ha recibido el identificador <span class="font-mono font-semibold text-[#2563EB]">#PR-104</span> y pasará a revisión abierta en el repositorio.
+                            </p>
+                            <button onclick="resetProposalForm()" class="mt-2 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50">
+                                Enviar otra propuesta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. FOOTER SOBRIO -->
+    <footer class="bg-[#0F172A] text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pb-8 border-b border-slate-800">
+                <div>
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-7 h-7 rounded-lg bg-[#2563EB] text-white flex items-center justify-center font-mono font-bold text-xs">
+                            E_
+                        </div>
+                        <span class="font-bold text-base text-white">Evidencia España</span>
+                    </div>
+                    <p class="mt-2 text-xs text-slate-400 max-w-md leading-relaxed">
+                        Iniciativa ciudadana independiente orientada al diseño de políticas públicas basadas en datos, evaluación ex-post y sostenibilidad fiscal.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap gap-6 text-xs font-medium text-slate-300">
+                    <a href="#metodologia" class="hover:text-white transition-colors">Metodología</a>
+                    <a href="#areas" class="hover:text-white transition-colors">Las 8 Áreas</a>
+                    <a href="#presupuesto" class="hover:text-white transition-colors">Cuadre Económico</a>
+                    <a href="#participa" class="hover:text-white transition-colors">Participa</a>
+                    <button onclick="openWhitepaperModal()" class="hover:text-white transition-colors">Libro Blanco</button>
+                </div>
+            </div>
+
+            <div class="pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="creative-commons" class="w-4 h-4 text-slate-400"></i>
+                    <span>Contenido bajo licencia abierta <strong>Creative Commons CC BY-SA 4.0</strong>. Libre para citar, auditar y mejorar.</span>
+                </div>
+                <div class="font-mono text-[11px]">
+                    Build: v1.0.0-rc · Spain Policy Framework
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL INFORMATIVO LIBRO BLANCO (Sin alert()) -->
+    <div id="whitepaper-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 border border-slate-200 shadow-xl space-y-4">
+            <div class="flex items-start justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-cobalt-50 text-[#2563EB] flex items-center justify-center">
+                        <i data-lucide="book-open" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-[#0F172A]">Libro Blanco Técnico (v1.0)</h3>
+                        <span class="font-mono text-xs text-slate-500">Compendio completo · 9 bloques + Anexo fiscal</span>
+                    </div>
+                </div>
+                <button onclick="closeWhitepaperModal()" aria-label="Cerrar ventana" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <p class="text-sm text-slate-600 leading-relaxed">
+                El Libro Blanco recoge el desarrollo jurídico-competencial (artículos de la Constitución y leyes orgánicas afectadas), los KPIs detallados de diagnóstico y las memorias económicas de cada reforma.
+            </p>
+            <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 text-xs font-mono text-slate-700 space-y-1.5">
+                <div>• Formato: PDF Editorial / Markdown (GitHub)</div>
+                <div>• Extensión: 8 Áreas Sectoriales + Eje Transversal</div>
+                <div>• Validación: Test de estrés presupuestario AIReF</div>
+            </div>
+            <div class="pt-2 flex flex-col sm:flex-row justify-end gap-2.5">
+                <button onclick="closeWhitepaperModal()" class="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200">
+                    Cerrar
+                </button>
+                <button onclick="closeWhitepaperModal(); showToast('Descarga del Libro Blanco Técnico (v1.0) iniciada.');" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8]">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>Descargar Edición Completa</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST DE NOTIFICACIÓN RÁPIDA -->
+    <div id="toast-banner" class="hidden fixed bottom-5 right-5 z-50 bg-[#0F172A] text-white text-xs font-medium px-4 py-3 rounded-xl shadow-lg border border-slate-700 flex items-center gap-2.5">
+        <i data-lucide="info" class="w-4 h-4 text-[#2563EB]"></i>
+        <span id="toast-text">Notificación</span>
+    </div>
+
+    <!-- JAVASCRIPT DE INTERACTIVIDAD -->
+    <script>
+        // 1. BASE DE DATOS DE LAS 8 ÁREAS Y EJE TRANSVERSAL
+        const areasData = [
+            {
+                id: 'vivienda',
+                shortTitle: '1. Vivienda',
+                title: 'Vivienda, Suelo y Urbanismo',
+                tag: 'Bloque 01 · Mercado y Oferta',
+                icon: 'home',
+                problem: 'El esfuerzo financiero supera el 40-50% de la renta neta en áreas metropolitanas. Se visan ~105.000 viviendas/año frente a más de 200.000 nuevos hogares, mientras el parque público de alquiler es apenas del 2,5% (frente al 9% en la UE).',
+                solutions: [
+                    'Movilización urgente de suelo público en desuso y silencio administrativo positivo a los 90 días para licencias de obra nueva.',
+                    'Concesiones Build-to-Rent a 50-75 años sobre suelo público para que operadores privados construyan alquiler asequible que luego revierte al Estado.',
+                    'Seguro público de impagos y desalojo en menos de 30 días ante ocupación ilegal, sustituyendo topes coercitivos por bonificaciones fiscales en el IRPF a rentas moderadas.',
+                    'Prohibición legal perpetua de vender viviendas protegidas públicas a fondos privados.'
+                ],
+                impact: 'Reducción del esfuerzo de alquiler por debajo del 30% de la renta familiar y convergencia del parque asequible hacia el 8-10% del total en 8 años.'
+            },
+            {
+                id: 'sanidad',
+                shortTitle: '2. Sanidad',
+                title: 'Sanidad y Sostenibilidad del SNS',
+                tag: 'Bloque 02 · Salud Basada en Valor',
+                icon: 'heart-pulse',
+                problem: 'Más de 800.000 pacientes en lista de espera quirúrgica (>110 días de demora media). La Atención Primaria solo recibe el 14-15% del gasto sanitario y los pacientes crónicos consumen el 70% de los recursos por descompensaciones evitables.',
+                solutions: [
+                    'Blindaje por ley básica estatal del 25% del presupuesto sanitario para Atención Primaria, dotándola de ecógrafos y analíticas rápidas.',
+                    'Centralización real de compras de fármacos hospitalarios y alta tecnología médica en todo el SNS para lograr economías de escala del 15-25%.',
+                    'Contratos de riesgo compartido (Pay-for-Performance): pagar los medicamentos innovadores según resultados clínicos verificados en pacientes.',
+                    'Adecuación de plazas MIR a jubilaciones reales e incentivos retributivos en zonas rurales de difícil cobertura.'
+                ],
+                impact: 'Descenso del 40% en listas de espera quirúrgicas, resolución en el centro de salud sin saturar urgencias e Historia Clínica Digital Única interoperable.'
+            },
+            {
+                id: 'social',
+                shortTitle: '3. Social y Pensiones',
+                title: 'Asuntos Sociales, Demografía y Pensiones',
+                tag: 'Bloque 03 · Cohesión y Natalidad',
+                icon: 'users',
+                problem: 'Tasa de fecundidad en mínimos históricos (~1,14 hijos/mujer), pobreza infantil superior al 25% y subsidios (IMV y rentas autonómicas) con una "trampa de la pobreza" que retira el 100% de la ayuda si el perceptor acepta un empleo.',
+                solutions: [
+                    'Impuesto Negativo sobre la Renta gestionado por la AEAT: si encuentras un empleo bajo o parcial, la ayuda se reduce gradualmente para que trabajar siempre sume dinero neto.',
+                    'Universalización gratuita de las escuelas infantiles de 0 a 3 años y prestación directa por hijo a cargo para eliminar la penalización laboral por maternidad.',
+                    'Separación definitiva de fuentes en la Seguridad Social (llevando gastos impropios a impuestos generales) e implantación gradual de cuentas nocionales transparentes.'
+                ],
+                impact: 'Erradicación de la trampa de la pobreza, caída de la pobreza infantil por debajo del 15% y blindaje actuarial del sistema público de pensiones.'
+            },
+            {
+                id: 'educacion',
+                shortTitle: '4. Educación',
+                title: 'Educación, Capital Humano y FP Dual',
+                tag: 'Bloque 04 · Talento y Empleabilidad',
+                icon: 'graduation-cap',
+                problem: 'Abandono escolar temprano del 13-14% (casi el doble de la media eurozona), retroceso en comprensión lectora y matemáticas (PISA) y más de un 35% de titulados universitarios en empleos de baja cualificación mientras faltan técnicos de FP.',
+                solutions: [
+                    'Programas de refuerzo personalizado en Primaria (8-10 años) con profesores extra de lectura y matemáticas en centros de alta vulnerabilidad.',
+                    'Revolución de la FP Dual: cogestión del 50% de los currículos con empresas y bonificación del 100% de cotizaciones a pymes que acojan aprendices remunerados.',
+                    'Carrera docente por méritos pedagógicos y auditoría de gratuidad real y equilibrio de alumnado vulnerable en los conciertos educativos.'
+                ],
+                impact: 'Reducción del abandono escolar temprano por debajo del 9% (media UE) e inserción laboral superior al 80% en los ciclos de Formación Profesional.'
+            },
+            {
+                id: 'economia',
+                shortTitle: '5. Economía y Fiscalidad',
+                title: 'Economía, Fiscalidad y Productividad',
+                tag: 'Bloque 05 · Crecimiento Potencial',
+                icon: 'trending-up',
+                problem: 'Productividad estancada durante dos décadas, deuda pública >100% del PIB y más del 95% de microempresas (<10 empleados) atrapadas por escalones regulatorios punitivos al superar los 50 trabajadores o 6M€ de facturación.',
+                solutions: [
+                    'Devaluación fiscal interna: rebaja de cotizaciones sociales empresariales (especialmente en empleo juvenil e indefinido) compensada podando subvenciones ineficientes vía AIReF.',
+                    'Eliminación de los escalones regulatorios: periodo de transición gradual de 3 años al superar los 50 empleados para incentivar el crecimiento y fusión de pymes.',
+                    'Unidad de Mercado real (validez nacional automática de licencias autonómicas) y deducciones por I+D+i cobrables en efectivo (monetizables) para startups.'
+                ],
+                impact: 'Crecimiento adicional del PIB potencial de +0,6 puntos anuales a partir del tercer año y reducción de la deuda pública por debajo del 85% del PIB.'
+            },
+            {
+                id: 'energia',
+                shortTitle: '6. Energía y Agua',
+                title: 'Energía, Agua y Medio Ambiente',
+                tag: 'Bloque 06 · Transición Realista',
+                icon: 'zap',
+                problem: 'Pérdidas superiores al 20-25% del agua en redes municipales obsoletas, incendios forestales devastadores por falta de prevención y un calendario rígido de cierre nuclear que obligaría a quemar gas natural cuando no hay sol ni viento.',
+                solutions: [
+                    'Extensión de la vida útil del parque nuclear existente a 50-60 años (previo dictamen del CSN), aportando inercia síncrona y potencia firme libre de CO2 junto a las renovables.',
+                    'Reforma de impuestos nucleares redundantes (manteniendo íntegra la tasa Enresa de residuos) y aceleración de baterías, bombeo reversible e interconexiones con Europa.',
+                    'Plan Nacional de Renovación de Redes Hídricas (<10% de fugas) e inversión 80/20 en montes: 80% del presupuesto a silvicultura preventiva y 20% a extinción.'
+                ],
+                impact: 'Factura eléctrica estable y competitiva para hogares e industria, seguridad hídrica ante sequías y reducción drástica de hectáreas quemadas.'
+            },
+            {
+                id: 'justicia',
+                shortTitle: '7. Defensa y Justicia',
+                title: 'Seguridad Nacional, Defensa y Justicia',
+                tag: 'Bloque 07 · Estado de Derecho',
+                icon: 'scale',
+                problem: 'Millones de asuntos judiciales atascados por juzgados unipersonales y 17 sistemas informáticos incompatibles; impunidad en la multirreincidencia de hurtos y déficit inversor en Defensa por debajo del 2% acordado en la OTAN.',
+                solutions: [
+                    'Implantación de Tribunales colegiados de Instancia y Fiscalía Instructora (bajo Juez de Garantías), junto a un Expediente Judicial Digital Único interoperable.',
+                    'Reforma del Código Penal: prisión efectiva ante la acumulación de más de 3 condenas leves por hurto/estafa en un año y juicios rápidos telemáticos en 72h.',
+                    'Cumplimiento transparente del 2% del PIB en Defensa ligado a la industria tecnológica nacional (aeroespacial, drones, ciberdefensa) y Escala Nacional de Ciberdelincuencia en CFSE.'
+                ],
+                impact: 'Reducción del 30% en los tiempos medios de instrucción penal, fin de la puerta giratoria delictiva y soberanía tecnológica en seguridad nacional.'
+            },
+            {
+                id: 'regeneracion',
+                shortTitle: '8. Regeneración y Estado',
+                title: 'Regeneración Democrática y Función Pública',
+                tag: 'Bloque 08 · Calidad Institucional',
+                icon: 'landmark',
+                problem: 'Colonización partidista de reguladores (CNMC, Banco de España, Tribunal de Cuentas), contratos públicos fraccionados sin concurrencia y un estatuto funcionarial que premia solo la antigüedad sin evaluar el desempeño.',
+                solutions: [
+                    'Despolitización de reguladores: exigencia de 15 años de trayectoria profesional, audiencias públicas vinculantes y mandatos largos no coincidentes con elecciones.',
+                    'Supervisión algorítmica (IA) de toda la contratación pública para detectar fraccionamientos y carteles, más 5 años de incompatibilidad (puertas giratorias).',
+                    'Reforma del EBEP: retribución variable ligada a KPIs de servicio y cese garantista tras tres evaluaciones negativas independientes consecutivas, manteniendo el blindaje frente a ceses políticos.'
+                ],
+                impact: 'Ahorro directo de entre 10.000 y 15.000 M€/año en compras públicas y una administración ágil que rinde cuentas ante el ciudadano.'
+            },
+            {
+                id: 'cultura',
+                shortTitle: '9. Cultura, Deporte e Igualdad',
+                title: 'Cultura, Deporte e Igualdad Transversal',
+                tag: 'Bloque 09 · Prevención y Cohesión',
+                icon: 'award',
+                problem: 'Más del 40% de sedentarismo adulto que dispara el gasto sanitario crónico, exceso de subvención discrecional en cultura y brecha salarial derivada de la penalización por cuidados y falta de oportunidades en la España rural.',
+                solutions: [
+                    'Receta Deportiva en Atención Primaria: prescripción médica de ejercicio físico supervisado para pacientes crónicos e incentivos en IRPF al deporte de base.',
+                    'Nueva Ley de Mecenazgo con desgravaciones fiscales de hasta el 80% para atraer inversión privada estable a la cultura, junto a un Bono Cultural Digital juvenil.',
+                    'Auditorías salariales algorítmicas (cruce AEAT) contra la brecha de género, refuerzo predictivo (IA) en violencia machista y conectividad Gigabit rural.'
+                ],
+                impact: 'Amortización en <3 años de la receta deportiva por ahorro farmacéutico, ecosistema cultural autónomo e igualdad de oportunidades efectiva.'
+            }
+        ];
+
+        // 2. DATOS DEL SIMULADOR PRESUPUESTARIO
+        const budgetScenarios = {
+            conservador: {
+                badge: 'Estimación Prudente AIReF',
+                inflows: [
+                    { label: 'Ahorros Spending Review (AIReF y poda subvenciones)', amount: 8000, max: 15000, desc: 'Eliminación de duplicidades y partidas sin retorno verificado' },
+                    { label: 'Eficiencia Contratación Pública (Auditoría IA)', amount: 10000, max: 15000, desc: '5% de ahorro sobre 200.000 M€ licitados mediante concurrencia' },
+                    { label: 'Poda de Beneficios Fiscales Ineficientes', amount: 10000, max: 15000, desc: 'Supresión de exenciones regresivas ensanchando bases' }
+                ],
+                outflows: [
+                    { label: 'Senda Presupuestaria 2% PIB Defensa', amount: 7500, max: 8000, desc: 'Retorno >70% en I+D+i e industria tecnológica nacional' },
+                    { label: 'Universalización Infantil 0-3 Años y Crianza', amount: 3500, max: 8000, desc: 'Red pública/concertada gratuita + Impuesto Negativo Renta' },
+                    { label: 'Refuerzo Educativo Temprano y FP Dual', amount: 2500, max: 8000, desc: 'Profesores extra en Primaria y bonificación aprendices' },
+                    { label: 'Sanidad y Atención Primaria (25%)', amount: 2000, max: 8000, desc: 'Equipamiento diagnóstico neto del ahorro en compras' },
+                    { label: 'Infraestructura Hídrica, Justicia y Montes', amount: 1500, max: 8000, desc: 'Redes de agua (<10% fugas), expediente digital y prevención 80/20' }
+                ]
+            },
+            optimo: {
+                badge: 'Escenario Plena Ejecución (Año 4)',
+                inflows: [
+                    { label: 'Ahorros Spending Review (AIReF y poda subvenciones)', amount: 12000, max: 15000, desc: 'Auditoría integral de todas las administraciones públicas' },
+                    { label: 'Eficiencia Contratación Pública (Auditoría IA)', amount: 15000, max: 15000, desc: '7,5% de ahorro por eliminación de contratos fraccionados' },
+                    { label: 'Poda de Beneficios Fiscales Ineficientes', amount: 14000, max: 15000, desc: 'Armonización completa y cierre de agujeros tributarios' }
+                ],
+                outflows: [
+                    { label: 'Senda Presupuestaria 2% PIB Defensa', amount: 7500, max: 8000, desc: 'Cumplimiento íntegro del compromiso OTAN antes de 2029' },
+                    { label: 'Universalización Infantil 0-3 Años y Crianza', amount: 3500, max: 8000, desc: 'Cobertura universal 0-3 años en todo el territorio' },
+                    { label: 'Refuerzo Educativo Temprano y FP Dual', amount: 2500, max: 8000, desc: 'Despliegue completo de refuerzo escolar y FP Dual' },
+                    { label: 'Sanidad y Atención Primaria (25%)', amount: 2000, max: 8000, desc: 'Plena capacidad resolutiva y reducción listas de espera' },
+                    { label: 'Infraestructura Hídrica, Justicia y Montes', amount: 1500, max: 8000, desc: 'Modernización hídrica y Tribunales de Instancia operativos' }
+                ]
+            }
+        };
+
+        let currentAreaIndex = 0;
+
+        // Renderizar pestañas y tarjeta activa
+        function renderAreas() {
+            const tabsContainer = document.getElementById('tabs-container');
+            tabsContainer.innerHTML = areasData.map((area, index) => {
+                const isActive = index === currentAreaIndex;
+                return `
+                    <button 
+                        role="tab"
+                        aria-selected="${isActive}"
+                        onclick="selectArea(${index})"
+                        class="tab-transition shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold border ${
+                            isActive 
+                            ? 'bg-[#0F172A] text-white border-[#0F172A] shadow-sm' 
+                            : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-[#0F172A]'
+                        }">
+                        <i data-lucide="${area.icon}" class="w-4 h-4 ${isActive ? 'text-[#60A5FA]' : 'text-slate-400'}"></i>
+                        <span>${area.shortTitle}</span>
+                    </button>
+                `;
+            }).join('');
+
+            const activeArea = areasData[currentAreaIndex];
+            const display = document.getElementById('area-display');
+            
+            display.innerHTML = `
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-6 mb-6 border-b border-slate-200/80">
+                    <div>
+                        <span class="font-mono text-xs font-semibold uppercase tracking-wider text-[#2563EB]">${activeArea.tag}</span>
+                        <h3 class="mt-1 text-xl sm:text-2xl font-extrabold text-[#0F172A]">${activeArea.title}</h3>
+                    </div>
+                    <div class="flex items-center gap-2 self-start sm:self-center">
+                        <button onclick="selectArea(${(currentAreaIndex - 1 + areasData.length) % areasData.length})" aria-label="Área anterior" class="p-2 rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-[#0F172A] hover:bg-slate-50">
+                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                        </button>
+                        <span class="font-mono text-xs text-slate-500 px-2">${currentAreaIndex + 1} / ${areasData.length}</span>
+                        <button onclick="selectArea(${(currentAreaIndex + 1) % areasData.length})" aria-label="Área siguiente" class="p-2 rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-[#0F172A] hover:bg-slate-50">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Columna 1: El Problema (Dato) -->
+                    <div class="lg:col-span-4 bg-white rounded-xl p-5 border border-slate-200/90 flex flex-col justify-between">
+                        <div>
+                            <div class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200/70 mb-3">
+                                <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
+                                <span>El Problema (Dato Real)</span>
+                            </div>
+                            <p class="text-sm text-slate-700 leading-relaxed">
+                                ${activeArea.problem}
+                            </p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100">
+                            <div class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-[#059669] bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200/70 mb-2">
+                                <i data-lucide="target" class="w-3.5 h-3.5"></i>
+                                <span>El Impacto Esperado</span>
+                            </div>
+                            <p class="text-sm font-medium text-[#0F172A] leading-snug">
+                                ${activeArea.impact}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Columna 2: La Solución Concreta -->
+                    <div class="lg:col-span-8 bg-white rounded-xl p-5 sm:p-6 border border-slate-200/90">
+                        <div class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-[#2563EB] bg-cobalt-50 px-2.5 py-1 rounded-md border border-cobalt-100 mb-4">
+                            <i data-lucide="check-square" class="w-3.5 h-3.5"></i>
+                            <span>La Solución Concreta (Basada en Evidencia)</span>
+                        </div>
+                        <ul class="space-y-3.5">
+                            ${activeArea.solutions.map(sol => `
+                                <li class="flex items-start gap-3 text-sm text-slate-700 leading-relaxed">
+                                    <span class="w-5 h-5 rounded-full bg-cobalt-50 text-[#2563EB] flex items-center justify-center shrink-0 mt-0.5 font-mono text-xs font-bold">✓</span>
+                                    <span>${sol}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            lucide.createIcons();
+        }
+
+        function selectArea(index) {
+            currentAreaIndex = index;
+            renderAreas();
+        }
+
+        // 3. LÓGICA DEL SIMULADOR PRESUPUESTARIO
+        function formatMillions(num) {
+            return num.toLocaleString('es-ES') + ' M€';
+        }
+
+        function setBudgetScenario(mode) {
+            const data = budgetScenarios[mode];
+            const btnConservador = document.getElementById('btn-conservador');
+            const btnOptimo = document.getElementById('btn-optimo');
+
+            if (mode === 'conservador') {
+                btnConservador.className = 'px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-[#0F172A] text-white shadow-sm';
+                btnOptimo.className = 'px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-[#0F172A]';
+            } else {
+                btnOptimo.className = 'px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-[#059669] text-white shadow-sm';
+                btnConservador.className = 'px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-[#0F172A]';
+            }
+
+            const totalIn = data.inflows.reduce((acc, item) => acc + item.amount, 0);
+            const totalOut = data.outflows.reduce((acc, item) => acc + item.amount, 0);
+            const netSurplus = totalIn - totalOut;
+
+            document.getElementById('scenario-badge').textContent = data.badge;
+            document.getElementById('net-surplus-display').textContent = '+' + formatMillions(netSurplus);
+            document.getElementById('net-detail-display').textContent = `${formatMillions(totalIn)} ingresos − ${formatMillions(totalOut)} inversión`;
+            document.getElementById('total-inflows').textContent = '+' + formatMillions(totalIn);
+            document.getElementById('total-outflows').textContent = '-' + formatMillions(totalOut);
+
+            // Renderizar barras de ingresos
+            document.getElementById('inflows-list').innerHTML = data.inflows.map(item => {
+                const pct = Math.min(100, Math.round((item.amount / item.max) * 100));
+                return `
+                    <div>
+                        <div class="flex justify-between items-baseline text-sm mb-1">
+                            <span class="font-semibold text-[#0F172A]">${item.label}</span>
+                            <span class="font-mono font-bold text-[#059669] shrink-0 ml-2">+${formatMillions(item.amount)}</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mb-2">${item.desc}</p>
+                        <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-[#059669] rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Renderizar barras de gastos
+            document.getElementById('outflows-list').innerHTML = data.outflows.map(item => {
+                const pct = Math.min(100, Math.round((item.amount / item.max) * 100));
+                return `
+                    <div>
+                        <div class="flex justify-between items-baseline text-sm mb-1">
+                            <span class="font-semibold text-[#0F172A]">${item.label}</span>
+                            <span class="font-mono font-bold text-[#2563EB] shrink-0 ml-2">-${formatMillions(item.amount)}</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mb-1.5">${item.desc}</p>
+                        <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-[#2563EB] rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 4. FORMULARIO DE PARTICIPACIÓN OPEN-SOURCE
+        document.getElementById('proposal-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('user-name').value.trim();
+            const email = document.getElementById('user-email').value.trim();
+            const area = document.getElementById('user-area').value;
+            const proposal = document.getElementById('user-proposal').value.trim();
+            const errorBox = document.getElementById('form-error');
+
+            const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+            if (!name || !emailValid || proposal.length < 10) {
+                errorBox.classList.remove('hidden');
+                return;
+            }
+
+            errorBox.classList.add('hidden');
+            const randomId = Math.floor(105 + Math.random() * 890);
+            document.getElementById('success-summary').innerHTML = `
+                Gracias, <strong>${name}</strong>. Tu aportación sobre <strong>${area}</strong> ha recibido el identificador <span class="font-mono font-semibold text-[#2563EB]">#PR-${randomId}</span> y está lista para su revisión abierta.
+            `;
+            document.getElementById('proposal-form').classList.add('hidden');
+            document.getElementById('form-success').classList.remove('hidden');
+            lucide.createIcons();
+        });
+
+        function resetProposalForm() {
+            document.getElementById('proposal-form').reset();
+            document.getElementById('form-success').classList.add('hidden');
+            document.getElementById('proposal-form').classList.remove('hidden');
+        }
+
+        // 5. MENÚ MÓVIL, MODAL Y TOAST
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+
+        function openWhitepaperModal() {
+            document.getElementById('whitepaper-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeWhitepaperModal() {
+            document.getElementById('whitepaper-modal').classList.add('hidden');
+        }
+
+        let toastTimer;
+        function showToast(msg) {
+            const toast = document.getElementById('toast-banner');
+            document.getElementById('toast-text').textContent = msg;
+            toast.classList.remove('hidden');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        }
+
+        // Inicialización al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAreas();
+            setBudgetScenario('conservador');
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
